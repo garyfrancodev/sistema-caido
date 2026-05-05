@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  servicio-usuarios:
+    build: ./servicio-usuarios
+    ports:
+      - "3001:3001"
+    networks:
+      - red-tienda
+
+  servicio-productos:
+    build: ./servicio-productos
+    ports:
+      - "3002:3002"
+    networks:
+      - red-tienda
+
+  servicio-ordenes:
+    build: ./servicio-ordenes
+    ports:
+      - "3003:3003"
+    environment:
+      USUARIOS_URL: http://usuarios:3001
+      PRODUCTOS_URL: http://servicio-productos:3002
+    networks:
+      - red-tienda
+    depends_on:
+      - servicio-usuarios
+      - servicio-productos
+
+networks:
+  red-tienda:
+    driver: bridge
